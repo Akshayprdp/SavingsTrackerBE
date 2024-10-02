@@ -3,9 +3,6 @@ const jwt = require('jsonwebtoken');
 const userModel = require("../Model/userModel");
 const bcrypt = require("bcrypt");
 const secretKey = "your_secret_key";
-// const productaddModel=require('../Model/productaddModel')
-// const users = require('../Model/userModel');
-// const Products = require('../Model/productaddModel');
 
 
 module.exports.signup = async (req, res) => {
