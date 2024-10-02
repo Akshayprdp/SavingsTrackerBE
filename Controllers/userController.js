@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken');
 const userModel = require("../Model/userModel");
 const bcrypt = require("bcrypt");
 const secretKey = "your_secret_key";
-const productaddModel=require('../Model/productaddModel')
-const users = require('../Model/userModel');
-const Products = require('../Model/productaddModel');
+// const productaddModel=require('../Model/productaddModel')
+// const users = require('../Model/userModel');
+// const Products = require('../Model/productaddModel');
 
 
 module.exports.signup = async (req, res) => {
@@ -56,35 +56,6 @@ module.exports.login = async (req, res) => {
         return res.json({ message: "An error occurred", success: false });
     }
 };
-
-module.exports.products = async (req, res) => {
-    try {
-      const products = await productaddModel.find();
-      if (products) {
-        res.json({ status: true, products });
-      } else {
-        res.json({ status: false, message: "No products found" });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ status: false, message: "Server error" });
-    }
-  };
-
-  module.exports.getProductById = async (req, res) => {
-    try {
-      const product = await productaddModel.findById(req.params.id);
-      if (product) {
-        res.json({ status: true, product });
-      } else {
-        res.json({ status: false, message: "Product not found" });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ status: false, message: "Server error" });
-    }
-  };
-
   module.exports.updateProfile = async (req, res) => {
     try {
         const { email, username, Phonenumber } = req.body;
