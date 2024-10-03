@@ -85,17 +85,19 @@ module.exports.removeExpense = async (req, res) => {
 
   try {
     const userExpenses = await Expense.findOne({ userId });
+
     if (!userExpenses) {
       return res.status(404).json({ message: "User expenses not found", success: false });
     }
 
-    const expense = userExpenses.expenses.id(expenseId);
-    if (!expense) {
+    // Use `pull` to remove the expense from the array
+    const removedExpense = userExpenses.expenses.id(expenseId);
+    if (!removedExpense) {
       return res.status(404).json({ message: "Expense not found", success: false });
     }
 
-    expense.remove(); // Remove the expense
-    await userExpenses.save();
+    userExpenses.expenses.pull(expenseId); // Remove the specific expense
+    await userExpenses.save(); // Save the updated user expenses
 
     res.json({ message: "Expense removed successfully", success: true, remainingExpenses: userExpenses.expenses });
   } catch (error) {
@@ -103,3 +105,4 @@ module.exports.removeExpense = async (req, res) => {
     res.status(500).json({ message: "Server error", success: false });
   }
 };
+
