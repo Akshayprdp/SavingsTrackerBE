@@ -57,3 +57,22 @@ exports.updateIncome = async (req, res) => {
     });
   }
 };
+
+exports.getIncomeByUserId = async (req, res) => {
+  try {
+    const userId = req.params.userId; // Retrieve the userId from request parameters
+
+    // Find income data for the given userId
+    const income = await Income.find({ userId });
+
+    if (!income || income.length === 0) {
+      return res.status(404).json({ message: 'No income data found for this user.' });
+    }
+
+    // Return income data
+    return res.status(200).json(income);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error. Please try again later.' });
+  }
+};

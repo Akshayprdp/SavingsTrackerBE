@@ -50,9 +50,10 @@ module.exports.getExpenses = async (req, res) => {
 };
 
 // Update an expense for a user
+// Update an expense for a user
 module.exports.updateExpense = async (req, res) => {
-  const { userId, expenseId } = req.params;
-  const { Category, Amount, Description, date } = req.body;
+  const { userId, expenseId } = req.params; // Extract parameters from req.params
+  const { Category, Amount, Description, date } = req.body; // Extract fields from req.body
 
   try {
     const userExpenses = await Expense.findOne({ userId });
@@ -85,19 +86,17 @@ module.exports.removeExpense = async (req, res) => {
 
   try {
     const userExpenses = await Expense.findOne({ userId });
-
     if (!userExpenses) {
       return res.status(404).json({ message: "User expenses not found", success: false });
     }
 
-    // Use `pull` to remove the expense from the array
-    const removedExpense = userExpenses.expenses.id(expenseId);
-    if (!removedExpense) {
+    const expense = userExpenses.expenses.id(expenseId);
+    if (!expense) {
       return res.status(404).json({ message: "Expense not found", success: false });
     }
 
-    userExpenses.expenses.pull(expenseId); // Remove the specific expense
-    await userExpenses.save(); // Save the updated user expenses
+    expense.remove(); // Remove the expense
+    await userExpenses.save();
 
     res.json({ message: "Expense removed successfully", success: true, remainingExpenses: userExpenses.expenses });
   } catch (error) {
@@ -105,4 +104,3 @@ module.exports.removeExpense = async (req, res) => {
     res.status(500).json({ message: "Server error", success: false });
   }
 };
-
