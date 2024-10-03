@@ -1,7 +1,7 @@
-const Income = require('../Model/incomeModel'); 
+const Income = require("../Model/incomeModel");
 
 exports.addIncome = async (req, res) => {
-  const { userId, amount} = req.body;
+  const { userId, amount } = req.body;
 
   try {
     const newIncome = new Income({
@@ -13,68 +13,54 @@ exports.addIncome = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: 'Income saved successfully',
+      message: "Income saved successfully",
       income: newIncome,
     });
   } catch (error) {
     console.error("Error saving income:", error);
     return res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: "Server error",
     });
   }
 };
 
 exports.getIncomeByUserId = async (req, res) => {
   try {
-    const userId = req.params.userId; // Retrieve the userId from request parameters
+    const userId = req.params.userId; 
 
-    // Find income data for the given userId
     const income = await Income.find({ userId });
 
     if (!income || income.length === 0) {
-      return res.status(404).json({ message: 'No income data found for this user.' });
+      return res
+        .status(404)
+        .json({ message: "No income data found for this user." });
     }
-
-    // Return income data
     return res.status(200).json(income);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Server error. Please try again later.' });
+    return res
+      .status(500)
+      .json({ message: "Server error. Please try again later." });
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports.removeIncome = async (req, res) => {
   const { userId, incomeId } = req.params;
-
-  console.log('Received userId:', userId);
-  console.log('Received incomeId:', incomeId);
+  console.log("Received incomeId:", incomeId);
 
   try {
-      const income = await Income.findOneAndDelete({ _id: incomeId, userId });
+    const income = await Income.findOneAndDelete({ _id: incomeId, userId });
 
-      if (!income) {
-          return res.status(404).json({ message: "Income not found", success: false });
-      }
+    if (!income) {
+      return res
+        .status(404)
+        .json({ message: "Income not found", success: false });
+    }
 
-      res.json({ message: "Income removed successfully", success: true });
+    res.json({ message: "Income removed successfully", success: true });
   } catch (error) {
-      console.error("Error removing income:", error);
-      res.status(500).json({ message: "Server error", success: false });
+    console.error("Error removing income:", error);
+    res.status(500).json({ message: "Server error", success: false });
   }
 };
-
-

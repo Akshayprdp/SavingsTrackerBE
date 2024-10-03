@@ -1,7 +1,7 @@
 const express =require("express")
 const { signup,login,updateProfile } = require("../Controllers/userController")
 const {addExpense,getExpenses,updateExpense,removeExpense,} = require("../Controllers/expenseController");
-const {addSavingsGoal}=require("../Controllers/savingController")
+const {addSavingsGoal,getSavingsGoalByUserId,deleteSavingsGoal}=require("../Controllers/savingController")
 const{addIncome,getIncomeByUserId,removeIncome}=require("../Controllers/incomeController")
 const router = express.Router()
 
@@ -28,6 +28,9 @@ router.delete('/removeincome/:userId/:incomeId', removeIncome);
 
 // saving routes
 router.post("/addsaving",addSavingsGoal)
+router.get('/savings/:userId',getSavingsGoalByUserId)
+router.delete('/removesavings/:userId/:incomeId', deleteSavingsGoal);
+
 
 
 
