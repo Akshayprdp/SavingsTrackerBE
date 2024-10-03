@@ -49,8 +49,6 @@ module.exports.getExpenses = async (req, res) => {
   }
 };
 
-// Update an expense for a user
-// Update an expense for a user
 module.exports.updateExpense = async (req, res) => {
   const { userId, expenseId } = req.params; // Extract parameters from req.params
   const { Category, Amount, Description, date } = req.body; // Extract fields from req.body
@@ -85,17 +83,22 @@ module.exports.removeExpense = async (req, res) => {
   const { userId, expenseId } = req.params;
 
   try {
+    // Find the user's expenses document
     const userExpenses = await Expense.findOne({ userId });
     if (!userExpenses) {
       return res.status(404).json({ message: "User expenses not found", success: false });
     }
 
+    // Check if the expense exists in the expenses array
     const expense = userExpenses.expenses.id(expenseId);
     if (!expense) {
       return res.status(404).json({ message: "Expense not found", success: false });
     }
 
-    expense.remove(); // Remove the expense
+    // Use pull to remove the expense by ID
+    userExpenses.expenses.pull({ _id: expenseId });
+    
+    // Save the updated document
     await userExpenses.save();
 
     res.json({ message: "Expense removed successfully", success: true, remainingExpenses: userExpenses.expenses });
