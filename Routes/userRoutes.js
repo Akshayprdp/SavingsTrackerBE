@@ -29,7 +29,7 @@ router.delete('/removeincome/:userId/:incomeId', removeIncome);
 // saving routes
 router.post("/addsaving",addSavingsGoal)
 router.get('/savings/:userId',getSavingsGoalByUserId)
-router.delete('/removesavings/:userId/:incomeId', deleteSavingsGoal);
+router.delete('/removesavings/:userId/:savingsId', deleteSavingsGoal);
 
 
 

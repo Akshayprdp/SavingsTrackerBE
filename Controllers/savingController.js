@@ -57,11 +57,7 @@ exports.getSavingsGoalByUserId = async (req, res) => {
 
 exports.deleteSavingsGoal = async (req, res) => {
   const { userId, savingsId } = req.params;
-  // console.log("Received userId:", userId);
-  console.log("Received savingsId:", savingsId);
-
-  try {
-    // Find and delete the savings goal
+ try {
     const result = await SavingsGoal.findOneAndDelete({ _id: savingsId, userId });
 
     if (!result) {

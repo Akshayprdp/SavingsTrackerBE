@@ -47,8 +47,6 @@ exports.getIncomeByUserId = async (req, res) => {
 
 module.exports.removeIncome = async (req, res) => {
   const { userId, incomeId } = req.params;
-  console.log("Received incomeId:", incomeId);
-
   try {
     const income = await Income.findOneAndDelete({ _id: incomeId, userId });
 
