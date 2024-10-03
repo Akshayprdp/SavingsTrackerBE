@@ -1,6 +1,5 @@
 const Income = require('../Model/incomeModel'); 
 
-
 exports.addIncome = async (req, res) => {
   const { userId, amount} = req.body;
 
@@ -26,38 +25,6 @@ exports.addIncome = async (req, res) => {
   }
 };
 
-
-exports.updateIncome = async (req, res) => {
-  const { userId, amount } = req.body; 
-
-  try {
-    const updatedIncome = await Income.findOneAndUpdate(
-      { userId }, 
-      { amount }, 
-      { new: true } 
-    );
-
-    if (!updatedIncome) {
-      return res.status(404).json({
-        success: false,
-        message: 'Income not found',
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: 'Income updated successfully',
-      income: updatedIncome,
-    });
-  } catch (error) {
-    console.error("Error updating income:", error);
-    return res.status(500).json({
-      success: false,
-      message: 'Server error',
-    });
-  }
-};
-
 exports.getIncomeByUserId = async (req, res) => {
   try {
     const userId = req.params.userId; // Retrieve the userId from request parameters
@@ -76,3 +43,38 @@ exports.getIncomeByUserId = async (req, res) => {
     return res.status(500).json({ message: 'Server error. Please try again later.' });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports.removeIncome = async (req, res) => {
+  const { userId, incomeId } = req.params;
+
+  console.log('Received userId:', userId);
+  console.log('Received incomeId:', incomeId);
+
+  try {
+      const income = await Income.findOneAndDelete({ _id: incomeId, userId });
+
+      if (!income) {
+          return res.status(404).json({ message: "Income not found", success: false });
+      }
+
+      res.json({ message: "Income removed successfully", success: true });
+  } catch (error) {
+      console.error("Error removing income:", error);
+      res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
+
