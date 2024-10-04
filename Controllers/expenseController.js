@@ -49,35 +49,6 @@ module.exports.getExpenses = async (req, res) => {
   }
 };
 
-module.exports.updateExpense = async (req, res) => {
-  const { userId, expenseId } = req.params; // Extract parameters from req.params
-  const { Category, Amount, Description, date } = req.body; // Extract fields from req.body
-
-  try {
-    const userExpenses = await Expense.findOne({ userId });
-    if (!userExpenses) {
-      return res.status(404).json({ message: "User expenses not found", success: false });
-    }
-
-    const expense = userExpenses.expenses.id(expenseId);
-    if (!expense) {
-      return res.status(404).json({ message: "Expense not found", success: false });
-    }
-
-    // Update fields if provided
-    if (Category) expense.Category = Category;
-    if (Amount) expense.Amount = Amount;
-    if (Description) expense.Description = Description;
-    if (date) expense.date = date;
-
-    await userExpenses.save();
-    res.json({ message: "Expense updated successfully", success: true, updatedExpense: expense });
-  } catch (error) {
-    console.error("Error updating expense:", error);
-    res.status(500).json({ message: "Server error", success: false });
-  }
-};
-
 // Remove an expense for a user
 module.exports.removeExpense = async (req, res) => {
   const { userId, expenseId } = req.params;
@@ -104,6 +75,42 @@ module.exports.removeExpense = async (req, res) => {
     res.json({ message: "Expense removed successfully", success: true, remainingExpenses: userExpenses.expenses });
   } catch (error) {
     console.error("Error removing expense:", error);
+    res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
+// expenseController.js
+
+module.exports.updateExpense = async (req, res) => {
+  const { userId, expenseId } = req.params; // Extract parameters from req.params
+  const { Category, Amount, Description, date } = req.body; // Extract fields from req.body
+
+  try {
+    // Find the user's expenses document by userId
+    const userExpenses = await Expense.findOne({ userId });
+    if (!userExpenses) {
+      return res.status(404).json({ message: "User expenses not found", success: false });
+    }
+
+    // Find the specific expense by expenseId
+    const expense = userExpenses.expenses.id(expenseId);
+    if (!expense) {
+      return res.status(404).json({ message: "Expense not found", success: false });
+    }
+
+    // Update fields if provided
+    if (Category) expense.category = Category;
+    if (Amount) expense.amount = Amount;
+    if (Description) expense.description = Description;
+    if (date) expense.date = new Date(date); // Convert date string to Date object
+
+    // Save the updated user expenses document
+    await userExpenses.save();
+
+    // Return the updated expense
+    res.json({ message: "Expense updated successfully", success: true, updatedExpense: expense });
+  } catch (error) {
+    console.error("Error updating expense:", error);
     res.status(500).json({ message: "Server error", success: false });
   }
 };

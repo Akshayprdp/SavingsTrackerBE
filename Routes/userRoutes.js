@@ -16,7 +16,8 @@ router.put('/updateProfile', updateProfile);
 // expenses routes
 router.post("/addExpense", addExpense);
 router.get("/getExpenses/:userId", getExpenses);
-// router.put("/updateExpense/:userId/:expenseId", updateExpense);
+// router.put("/updateExpense", updateExpense);
+router.put('/updateExpense/:userId/:expenseId', updateExpense);
 // router.put("/updateExpense", updateExpense);
 
 router.delete("/removeExpense/:userId/:expenseId", removeExpense);
